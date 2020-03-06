@@ -66,7 +66,7 @@ void multi::remove(easy* easy_handle)
 	}
 }
 
-void multi::socket_register(boost::shared_ptr<socket_info> si)
+void multi::socket_register(std::shared_ptr<socket_info> si)
 {
 	socket_type::native_handle_type fd = si->socket->native_handle();
 	sockets_.insert(socket_map_type::value_type(fd, si));
@@ -105,9 +105,7 @@ void multi::assign(native::curl_socket_t sockfd, void* user_data)
 
 void multi::socket_action(native::curl_socket_t s, int event_bitmask)
 {
-	boost::system::error_code ec(native::curl_multi_socket_action(handle_, s, event_bitmask, &still_running_));
-	boost::asio::detail::throw_error(ec);
-
+	native::curl_multi_socket_action(handle_, s, event_bitmask, &still_running_);
 	if (!still_running())
 	{
 		timeout_.cancel();
@@ -297,36 +295,37 @@ multi::socket_info_ptr multi::get_socket_from_native(native::curl_socket_t nativ
 int multi::socket(native::CURL* native_easy, native::curl_socket_t s, int what, void* userp, void* socketp)
 {
 	multi* self = static_cast<multi*>(userp);
-
+	
 	if (what == CURL_POLL_REMOVE)
 	{
 		// stop listening for events
 		socket_info_ptr* si = static_cast<socket_info_ptr*>(socketp);
-		self->monitor_socket(*si, CURL_POLL_NONE);
-		delete si;
-	}
-	else if (socketp)
-	{
-		// change direction
-		socket_info_ptr* si = static_cast<socket_info_ptr*>(socketp);
-		(*si)->handle = easy::from_native(native_easy);
-		self->monitor_socket(*si, what);
-	}
-	else if (native_easy)
-	{
-		// register the socket
-		socket_info_ptr si = self->get_socket_from_native(s);
-		if (!si)
-			throw std::invalid_argument("bad socket");
-		si->handle = easy::from_native(native_easy);
-		self->assign(s, new socket_info_ptr(si));
-		self->monitor_socket(si, what);
-	}
-	else
-	{
-		throw std::invalid_argument("neither socketp nor native_easy were set");
-	}
+		if (si) {
+			self->monitor_socket(*si, CURL_POLL_NONE);
+			delete si;
+		}
+	} else {
+		if (native_easy) {
+			// register the socket
+			socket_info_ptr si = self->get_socket_from_native(s);
+			if(si) {
+				si->handle = easy::from_native(native_easy);
+				self->monitor_socket(si, what);
+				self->assign(s, new socket_info_ptr(si));
+			} else {
+				self->assign(s, nullptr);
+			}
 
+		} else if (socketp) {
+			// change direction
+			socket_info_ptr* si = static_cast<socket_info_ptr*>(socketp);
+			(*si)->handle = easy::from_native(native_easy);
+			self->monitor_socket(*si, what);
+
+		} else {
+			throw std::invalid_argument("neither socketp nor native_easy were set");
+		}
+	}
 	return 0;
 }
 

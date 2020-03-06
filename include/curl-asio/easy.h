@@ -14,7 +14,6 @@
 #include <boost/function.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/preprocessor/stringize.hpp>
-#include <boost/shared_ptr.hpp>
 #include <iostream>
 #include <memory>
 #include <string>
@@ -148,10 +147,10 @@ namespace curl
 		void perform(boost::system::error_code& ec);
 		void async_perform(handler_type handler);
 		void cancel();
-		void set_source(boost::shared_ptr<std::istream> source);
-		void set_source(boost::shared_ptr<std::istream> source, boost::system::error_code& ec);
-		void set_sink(boost::shared_ptr<std::ostream> sink);
-		void set_sink(boost::shared_ptr<std::ostream> sink, boost::system::error_code& ec);
+		void set_source(std::shared_ptr<std::istream> source);
+		void set_source(std::shared_ptr<std::istream> source, boost::system::error_code& ec);
+		void set_sink(std::shared_ptr<std::ostream> sink);
+		void set_sink(std::shared_ptr<std::ostream> sink, boost::system::error_code& ec);
 
 		typedef boost::function<bool(native::curl_off_t dltotal, native::curl_off_t dlnow, native::curl_off_t ultotal, native::curl_off_t ulnow)> progress_callback_t;
 		void unset_progress_callback();
@@ -551,9 +550,10 @@ namespace curl
 		multi* multi_;
 		bool multi_registered_;
 		handler_type handler_;
-		boost::shared_ptr<std::istream> source_;
-		boost::shared_ptr<std::ostream> sink_;
+		std::shared_ptr<std::istream> source_;
+		std::shared_ptr<std::ostream> sink_;
 		std::string post_fields_;
+		// TODO: will be changed to std::shared_ptr 
 		boost::shared_ptr<form> form_;
 		boost::shared_ptr<string_list> headers_;
 		boost::shared_ptr<string_list> http200_aliases_;

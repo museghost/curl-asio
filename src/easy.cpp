@@ -106,14 +106,14 @@ void easy::cancel()
 	}
 }
 
-void easy::set_source(boost::shared_ptr<std::istream> source)
+void easy::set_source(std::shared_ptr<std::istream> source)
 {
 	boost::system::error_code ec;
 	set_source(source, ec);
 	boost::asio::detail::throw_error(ec, "set_source");
 }
 
-void easy::set_source(boost::shared_ptr<std::istream> source, boost::system::error_code& ec)
+void easy::set_source(std::shared_ptr<std::istream> source, boost::system::error_code& ec)
 {
 	source_ = source;
 	set_read_function(&easy::read_function, ec);
@@ -122,14 +122,14 @@ void easy::set_source(boost::shared_ptr<std::istream> source, boost::system::err
 	if (!ec) set_seek_data(this, ec);
 }
 
-void easy::set_sink(boost::shared_ptr<std::ostream> sink)
+void easy::set_sink(std::shared_ptr<std::ostream> sink)
 {
 	boost::system::error_code ec;
 	set_sink(sink, ec);
 	boost::asio::detail::throw_error(ec, "set_sink");
 }
 
-void easy::set_sink(boost::shared_ptr<std::ostream> sink, boost::system::error_code& ec)
+void easy::set_sink(std::shared_ptr<std::ostream> sink, boost::system::error_code& ec)
 {
 	sink_ = sink;
 	set_write_function(&easy::write_function);
@@ -504,7 +504,7 @@ void easy::init()
 native::curl_socket_t easy::open_tcp_socket(native::curl_sockaddr* address)
 {
 	boost::system::error_code ec;
-	std::auto_ptr<socket_type> socket(new socket_type(io_service_));
+	std::unique_ptr<socket_type> socket(new socket_type(io_service_));
 
 	switch (address->family)
 	{
@@ -526,7 +526,7 @@ native::curl_socket_t easy::open_tcp_socket(native::curl_sockaddr* address)
 	}
 	else
 	{
-		boost::shared_ptr<socket_info> si(new socket_info(this, socket));
+		std::shared_ptr<socket_info> si(new socket_info(this, std::move(socket)));
 		multi_->socket_register(si);
 		return si->socket->native_handle();
 	}

@@ -1,0 +1,20 @@
+option(
+    'with-example',
+    type: 'boolean',
+    value: true,
+    description: 'Enable building the examples',
+)
+
+option(
+    'with-tests',
+    type: 'boolean',
+    value: true,
+    description: 'Enable building the tests',
+)
+
+option(
+    'with-benchmark',
+    type: 'boolean',
+    value: true,
+    description: 'Enable building the benchmark',
+)

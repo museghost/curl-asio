@@ -13,9 +13,10 @@ using namespace curl;
 class curl_easy_error_category : public boost::system::error_category
 {
 public:
-	curl_easy_error_category() { }
+	curl_easy_error_category() = default;
 	const char* name() const BOOST_NOEXCEPT;
 	std::string message(int ev) const;
+	virtual ~curl_easy_error_category() = default;
 };
 
 const char* curl_easy_error_category::name() const BOOST_NOEXCEPT
@@ -31,9 +32,10 @@ std::string curl_easy_error_category::message(int ev) const
 class curl_multi_error_category : public boost::system::error_category
 {
 public:
-	curl_multi_error_category() { }
+	curl_multi_error_category() = default;
 	const char* name() const BOOST_NOEXCEPT;
 	std::string message(int ev) const;
+	virtual ~curl_multi_error_category() = default;
 };
 
 const char* curl_multi_error_category::name() const BOOST_NOEXCEPT
@@ -49,9 +51,10 @@ std::string curl_multi_error_category::message(int ev) const
 class curl_share_error_category : public boost::system::error_category
 {
 public:
-	curl_share_error_category() { }
+	curl_share_error_category() = default;
 	const char* name() const BOOST_NOEXCEPT;
 	std::string message(int ev) const;
+	virtual ~curl_share_error_category() = default;
 };
 
 const char* curl_share_error_category::name() const BOOST_NOEXCEPT
@@ -67,9 +70,10 @@ std::string curl_share_error_category::message(int ev) const
 class curl_form_error_category : public boost::system::error_category
 {
 public:
-	curl_form_error_category() { }
+	curl_form_error_category() = default;
 	const char* name() const BOOST_NOEXCEPT;
 	std::string message(int ev) const;
+	virtual ~curl_form_error_category() = default;
 };
 
 const char* curl_form_error_category::name() const BOOST_NOEXCEPT
