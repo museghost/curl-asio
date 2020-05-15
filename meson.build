@@ -17,8 +17,13 @@ if cc.get_id() == 'msvc'
     # pedantic compile flags
     extra_cpp_args = []
 else
-    extra_cpp_args = ['-Wshadow', '-pedantic', '-Wgnu-statement-expression', '-Wgnu-zero-variadic-macro-arguments']
+    extra_cpp_args = ['-Wshadow', '-pedantic',]
     extra_cpp_args += ['-fvisibility-inlines-hidden']
+    if cc.get_id() == 'clang'
+        extra_cpp_args += ['-Wgnu-statement-expression', '-Wgnu-zero-variadic-macro-arguments']
+    elif cc.get_id() == 'gcc'
+        #extra_cpp_args += ['-Wno-variadic-macros']
+    endif
 endif
 
 # dependencies
