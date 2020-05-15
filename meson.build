@@ -18,6 +18,7 @@ if cc.get_id() == 'msvc'
     extra_cpp_args = []
 else
     extra_cpp_args = ['-Wshadow', '-pedantic', '-Wgnu-statement-expression', '-Wgnu-zero-variadic-macro-arguments']
+    extra_cpp_args += ['-fvisibility-inlines-hidden']
 endif
 
 # dependencies

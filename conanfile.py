@@ -6,7 +6,7 @@ import shutil
 
 class curlasioConan(ConanFile):
     name = "curlasio"
-    version = "0.1.0"
+    version = "0.1.1"
     sha1_revision="125091eb731dcaf0495f1a62ba4f36aa1bbfdf38"
     description = "Seamlessly integrate libcurl with Boost.Asi"
     topics = ("boost", "asio", "curl", "libcurl")
