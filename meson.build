@@ -1,6 +1,6 @@
 project('curl-asio',
         ['c', 'cpp'],
-        version: '0.1.0',
+        version: '0.1.1',
         meson_version : '>= 0.52',
         default_options : [
 		    'cpp_std=c++17',
@@ -18,7 +18,7 @@ if cc.get_id() == 'msvc'
     extra_cpp_args = []
 else
     extra_cpp_args = ['-Wshadow', '-pedantic',]
-    extra_cpp_args += ['-fvisibility-inlines-hidden']
+    extra_cpp_args += ['-fvisibility=hidden', '-fvisibility-inlines-hidden',]
     if cc.get_id() == 'clang'
         extra_cpp_args += ['-Wgnu-statement-expression', '-Wgnu-zero-variadic-macro-arguments']
     elif cc.get_id() == 'gcc'
